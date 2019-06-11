@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>cy.request() bug</title>
+</head>
+
+<body>
+    <ul id="api-response-list"></ul>
+
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    async function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function main() {
+        for (let i = 0; i < 3; i++) {
+            const res = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
+            const json = res.data;
+            const list = document.getElementById('api-response-list');
+            const item = document.createElement('li');
+            const text = document.createTextNode(json.title);
+            item.appendChild(text);
+            list.appendChild(item);
+            if (window.timeBetweenRequestsInMs) {
+                await sleep(window.timeBetweenRequestsInMs)
+            }
+        }
+    }
+    main()
+  </script>
+</body>
+</html>
